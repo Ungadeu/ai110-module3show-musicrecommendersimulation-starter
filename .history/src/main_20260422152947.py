@@ -19,9 +19,7 @@ def main() -> None:
     user_prefs = {"favorite_genres": ["pop"], "favorite_moods": ["happy"], "target_energy": 0.8, "likes_acoustic": False}
 
     recommendations = recommend_songs(user_prefs, songs, k=5)
-    
 
-    print(f"Loaded songs: {len(songs)}")
     print("\n🎵 Top Music Recommendations 🎵\n")
     print("-" * 60)
     
