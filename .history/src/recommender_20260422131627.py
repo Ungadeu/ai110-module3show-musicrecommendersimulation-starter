@@ -94,7 +94,10 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     return score, reasons
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
-    """Recommend top k songs based on user preferences."""
+    """
+    Functional implementation of the recommendation logic.
+    Required by src/main.py
+    """
     scored_songs = [
         (song, score, ", ".join(reasons))
         for song in songs

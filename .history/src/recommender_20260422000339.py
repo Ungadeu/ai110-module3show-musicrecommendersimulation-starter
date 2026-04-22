@@ -71,7 +71,10 @@ def load_songs(csv_path: str) -> List[Dict]:
     return songs
 
 def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
-    """Calculate the score for a song based on user preferences."""
+    """
+    Scores a single song against user preferences.
+    Required by recommend_songs() and src/main.py
+    """
     score = 0.0
     reasons = []
     
@@ -85,20 +88,33 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
         score += 40.0
         reasons.append("mood match (+40)")
     
-    # Energy proximity: 60 * (1 - |target_energy - song_energy|)
+    # Energy proximity: 20 * (1 - |target_energy - song_energy|)
     energy_diff = abs(user_prefs['target_energy'] - song['energy'])
-    energy_score = 60.0 * (1.0 - energy_diff)
+    energy_score = 20.0 * (1.0 - energy_diff)
     score += energy_score
     reasons.append(f"energy proximity (+{energy_score:.1f})")
+    
+    # Valence proximity: assuming target_valence = 0.5 (neutral)
+    target_valence = 0.5
+    valence_diff = abs(target_valence - song['valence'])
+    valence_score = 20.0 * (1.0 - valence_diff)
+    score += valence_score
+    reasons.append(f"valence proximity (+{valence_score:.1f})")
+    
+    # Acousticness proximity: target based on likes_acoustic
+    target_acousticness = 1.0 if user_prefs.get('likes_acoustic', False) else 0.0
+    acousticness_diff = abs(target_acousticness - song['acousticness'])
+    acousticness_score = 20.0 * (1.0 - acousticness_diff)
+    score += acousticness_score
+    reasons.append(f"acousticness proximity (+{acousticness_score:.1f})")
     
     return score, reasons
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
-    """Recommend top k songs based on user preferences."""
-    scored_songs = [
-        (song, score, ", ".join(reasons))
-        for song in songs
-        for score, reasons in [score_song(user_prefs, song)]
-    ]
-    
-    return sorted(scored_songs, key=lambda x: x[1], reverse=True)[:k]
+    """
+    Functional implementation of the recommendation logic.
+    Required by src/main.py
+    """
+    # TODO: Implement scoring and ranking logic
+    # Expected return format: (song_dict, score, explanation)
+    return []
